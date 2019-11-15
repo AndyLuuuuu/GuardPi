@@ -6,11 +6,11 @@ export const MenuContainer = styled.View`
 `;
 
 export const LogoView = styled.View`
-  height: 25%;
+  height: 30%;
   width: 100%;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 50px;
 `;
 
 export const LogoImage = styled.Image`

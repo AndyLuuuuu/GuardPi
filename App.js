@@ -1,51 +1,84 @@
 import React, { useState } from "react";
-import { withTheme } from "styled-components";
+import { Text } from "react-native";
+import { ThemeProvider } from "styled-components";
 import { theme } from "./src/Theme/theme";
-import { Container } from "./AppStyled";
-import { createAppContainer } from "react-navigation";
+import { createAppContainer, createSwitchNavigator } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
-import { Dimensions } from "react-native";
 import Login from "./src/Components/LoginStack/Login/Login";
 import Forgot from "./src/Components/LoginStack/ForgotPass/ForgotPass";
+import { DrawerMenuIcon } from "./src/Components/Headers/Headers";
+import DrawerMenu from "./src/Components/DrawerMenu/Menu";
 import Home from "./src/Components/DrawerStack/Home/Home";
+import Sensor from "./src/Components/DrawerStack/Sensor/Sensor";
 
 // let { width, height } = Dimensions.get("window");
+
+const withHeader = (routeName, component, title) => {
+  return createStackNavigator({
+    [routeName]: {
+      screen: component,
+      // Import navigation here
+      navigationOptions: ({ navigation }) => ({
+        title: title,
+        // Return action to open drawer when clicked
+        headerLeft: <DrawerMenuIcon navigation={navigation} />
+      })
+    }
+  });
+};
 
 const LoginStack = createStackNavigator({
   loginScreen: {
     screen: Login,
     navigationOptions: {
-      title: "Login"
+      headerShown: false
     }
   },
   forgotScreen: {
     screen: Forgot,
     navigationOptions: {
-      title: "Forgot Password"
+      headerTransparent: true
     }
   }
 });
 
-const DrawerStack = createDrawerNavigator({
-  homeScreen: { screen: Home }
-});
-
-const PrimaryStack = createStackNavigator(
+const DrawerStack = createDrawerNavigator(
   {
-    loginStack: { screen: LoginStack },
-    baseStack: { screen: DrawerStack }
+    // Must create stack navigator for each screen to show header...
+    Home: withHeader("homeScreen", Home, "Home"),
+    Sensor: withHeader("sensorScreen", Sensor, "Sensor")
   },
   {
-    headerMode: "none",
-    title: "Login"
+    contentComponent: DrawerMenu
+  }
+);
+
+const PrimaryStack = createSwitchNavigator(
+  {
+    loginStack: {
+      screen: LoginStack
+    },
+    mainAppStack: { screen: DrawerStack }
+  },
+  {
+    // headerMode: "none",
+    // initialRouteName: "mainAppStack"
   }
 );
 
 const App = createAppContainer(PrimaryStack);
-const AppWithTheme = withTheme(({ theme }) => {
-  return <App screenProps={{ theme }} />;
-});
+
+const ThemedApp = () => {
+  return (
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
+  );
+};
+
+export default ThemedApp;
+// export default
 
 // const App = () => {
 //   return (
@@ -55,5 +88,3 @@ const AppWithTheme = withTheme(({ theme }) => {
 //     </Container>
 //   );
 // };
-
-export default AppWithTheme;

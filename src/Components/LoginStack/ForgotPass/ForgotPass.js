@@ -1,11 +1,23 @@
 import React from "react";
-import { Text } from "react-native";
-import { Container } from "./ForgotPassStyled";
+import { Text, Dimensions, KeyboardAvoidingView } from "react-native";
+import {
+  Container,
+  Title,
+  Input,
+  Button,
+  ButtonText
+} from "./ForgotPassStyled";
+const { width, height } = Dimensions.get("window");
 
 const Forgot = () => {
   return (
-    <Container>
-      <Text>Login</Text>
+    <Container width={width} height={height} behavior="padding">
+      <Title>Forgot Password</Title>
+      <Input placeholder="Username" />
+      <Input placeholder="Email" />
+      <Button activeOpacity={0.75}>
+        <ButtonText>Reset Password</ButtonText>
+      </Button>
     </Container>
   );
 };

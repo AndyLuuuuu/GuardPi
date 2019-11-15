@@ -1,5 +1,6 @@
 export const theme = {
   color: {
-    white: "white"
+    errorRed: "#f73939",
+    submitBlue: "#038cfc"
   }
 };

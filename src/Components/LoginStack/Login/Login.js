@@ -2,8 +2,9 @@ import React from "react";
 import { Text, Dimensions } from "react-native";
 import {
   Container,
+  LogoView,
+  LogoImage,
   Upper,
-  Title,
   Input,
   ErrorText,
   Button,
@@ -11,24 +12,27 @@ import {
   Lower,
   ForgotText,
   ForgotLink
-} from "./LoginStyled";
+} from "./Styled";
 
 const { width, height } = Dimensions.get("window");
 
 const Login = ({ navigation }) => {
   return (
     <Container width={width} height={height} behavior="padding">
+      <LogoImage
+        source={require("../../../../assets/guardPi_logo.png")}
+        resizeMode="contain"
+      />
       <Upper width={width} height={height}>
-        <Title>Login</Title>
         <Input placeholder="Username" />
         <Input placeholder="Password" secureTextEntry={true} />
-        <ErrorText>Please check details.</ErrorText>
         <Button
           activeOpacity={0.75}
           onPress={() => navigation.navigate("mainAppStack")}
         >
           <ButtonText>Login</ButtonText>
         </Button>
+        <ErrorText>Please check login credentials!</ErrorText>
       </Upper>
       <Lower>
         <ForgotText>Forgot your password?</ForgotText>

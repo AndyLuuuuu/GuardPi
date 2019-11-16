@@ -24,7 +24,7 @@ export const UpperMenu = styled.View`
   border-top-width: 1px;
 `;
 
-export const ItemView = styled.View`
+export const ItemView = styled.TouchableOpacity`
   width: 100%;
   flex-direction: row;
   align-items: center;

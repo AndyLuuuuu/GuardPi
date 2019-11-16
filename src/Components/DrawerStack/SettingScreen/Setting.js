@@ -1,13 +1,13 @@
 import React from "react";
-import { Container } from "./SensorStyled";
 import { Text } from "react-native";
+import { Container } from "./Styled";
 
-const Sensor = () => {
+const Settings = () => {
   return (
     <Container>
-      <Text>Home</Text>
+      <Text>Settings</Text>
     </Container>
   );
 };
 
-export default Sensor;
+export default Settings;

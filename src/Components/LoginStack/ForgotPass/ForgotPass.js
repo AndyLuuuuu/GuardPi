@@ -1,12 +1,6 @@
 import React from "react";
 import { Text, Dimensions, KeyboardAvoidingView } from "react-native";
-import {
-  Container,
-  Title,
-  Input,
-  Button,
-  ButtonText
-} from "./ForgotPassStyled";
+import { Container, Title, Input, Button, ButtonText } from "./Styled";
 const { width, height } = Dimensions.get("window");
 
 const Forgot = () => {

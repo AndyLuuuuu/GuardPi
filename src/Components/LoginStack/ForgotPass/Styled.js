@@ -5,24 +5,17 @@ export const Container = styled.KeyboardAvoidingView`
   align-items: center;
   width: ${props => props.width};
   height: ${props => props.height};
-  padding: 40px;
-`;
-
-export const Upper = styled.View`
-  flex: 1;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
+  padding: 30px 40px;
 `;
 
 export const Title = styled.Text`
   font-weight: 700;
-  font-size: 40px;
-  margin-bottom: 30px;
+  font-size: 35px;
+  margin-bottom: 10px;
 `;
 
 export const Input = styled.TextInput`
-  border: 1px solid rgba(0, 0, 0, 0.75);
+  border: 1px solid;
   width: 100%;
   padding: 8px;
   margin: 10px;
@@ -31,35 +24,17 @@ export const Input = styled.TextInput`
   border-radius: 25px;
 `;
 
-export const ErrorText = styled.Text`
-  color: ${props => props.theme.color.errorRed};
-  margin: 5px 0;
-  opacity: 0;
-`;
-
 export const Button = styled.TouchableOpacity`
   width: 100%;
-  background-color: ${props => props.theme.color.submitBlue};
+  background-color: #038cfc;
   padding: 10px;
   align-items: center;
   margin: 10px 0;
+  border-radius: 25px;
 `;
 
 export const ButtonText = styled.Text`
   color: ghostwhite;
   font-size: 20px;
   font-weight: 700;
-`;
-
-export const Lower = styled.View`
-  flex-direction: row;
-  padding: 20px 0;
-`;
-
-export const ForgotText = styled.Text``;
-
-export const ForgotLink = styled.Text`
-  margin-left: 5px;
-  text-decoration: underline;
-  color: #038cfc;
 `;

@@ -1,13 +1,13 @@
 import React from "react";
-import { Container } from "./HomeStyled";
 import { Text } from "react-native";
+import { Container } from "./Styled";
 
-const Home = () => {
+const Monitor = () => {
   return (
     <Container>
-      <Text>Home</Text>
+      <Text>Monitor</Text>
     </Container>
   );
 };
 
-export default Home;
+export default Monitor;

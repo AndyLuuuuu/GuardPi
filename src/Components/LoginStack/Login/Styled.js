@@ -5,62 +5,51 @@ export const Container = styled.KeyboardAvoidingView`
   align-items: center;
   width: ${props => props.width};
   height: ${props => props.height};
-  padding: 60px;
-`;
-
-export const LogoView = styled.View`
   flex: 1;
-  justify-content: center;
-  align-items: center;
+  padding: 50px;
 `;
 
 export const LogoImage = styled.Image`
   flex: 1;
-  height: 50%;
-  padding: 10px;
+  height: 75%;
 `;
 
 export const Upper = styled.View`
-  flex: 2;
+  flex: 1.5;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
+  padding: 40px 20px;
 `;
 
 export const Input = styled.TextInput`
-  border: 1px solid rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.5);
   width: 100%;
-  padding: 8px;
-  margin-bottom: 20px;
+  padding: 7.5px;
+  margin: 10px;
   text-align: center;
   font-size: 17px;
-  border-radius: 25px;
-`;
-
-export const ErrorText = styled.Text`
-  color: ${props => props.theme.color.errorRed};
-  margin: 15px 0;
-  /* opacity: 0; */
 `;
 
 export const Button = styled.TouchableOpacity`
   width: 100%;
   background-color: ${props => props.theme.color.submitBlue};
-  padding: 10px;
+  padding: 7.5px;
   align-items: center;
-  border-radius: 25px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 `;
 
 export const ButtonText = styled.Text`
   color: ghostwhite;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
 `;
 
 export const Lower = styled.View`
-  flex: 1;
   flex-direction: row;
-  align-items: flex-end;
+  justify-content: center;
+  width: 100%;
 `;
 
 export const ForgotText = styled.Text``;

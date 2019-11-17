@@ -2,11 +2,9 @@ import React from "react";
 import { Text, Dimensions } from "react-native";
 import {
   Container,
-  LogoView,
   LogoImage,
   Upper,
   Input,
-  ErrorText,
   Button,
   ButtonText,
   Lower,
@@ -32,14 +30,13 @@ const Login = ({ navigation }) => {
         >
           <ButtonText>Login</ButtonText>
         </Button>
-        <ErrorText>Please check login credentials!</ErrorText>
+        <Lower>
+          <ForgotText>Forgot your password?</ForgotText>
+          <ForgotLink onPress={() => navigation.navigate("forgotScreen")}>
+            Click here
+          </ForgotLink>
+        </Lower>
       </Upper>
-      <Lower>
-        <ForgotText>Forgot your password?</ForgotText>
-        <ForgotLink onPress={() => navigation.navigate("forgotScreen")}>
-          Click here
-        </ForgotLink>
-      </Lower>
     </Container>
   );
 };

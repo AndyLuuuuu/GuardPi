@@ -5,7 +5,7 @@ import { DrawerMenuView } from "./Styled";
 export const DrawerMenuIcon = ({ navigation }) => {
   return (
     <DrawerMenuView>
-      <Icon name="menu" size={32} onPress={() => navigation.openDrawer()} />
+      <Icon name="menu" size={35} onPress={() => navigation.openDrawer()} />
     </DrawerMenuView>
   );
 };

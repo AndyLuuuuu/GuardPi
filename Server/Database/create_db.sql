@@ -32,6 +32,8 @@ CREATE TABLE systemEvents(
         ON UPDATE CASCADE
 );
 
+INSERT INTO userAccounts SET id = "ee83d499-f19f-4101-9b55-b50d0311b768", username="guardPi_user", userPass="$2b$10$OhrmA9r0N62rH4J5.KAj5OBfw2xLoiTBiPCfLsULj.UjvxovuMRUO", token="7689e12f-6498-4b63-804f-94cd463d0d4f";
+
 -- omit creating a user if user account below has already been created
-CREATE USER 'guardPi_user'@'localhost' IDENTIFIED BY PASSWORD 'XeqLLSLkl3IcgsYp';
+CREATE USER 'guardPi_user'@'localhost' IDENTIFIED BY 'XeqLLSLkl3IcgsYp';
 GRANT SELECT, DELETE, INSERT, UPDATE ON guardPi.* TO 'guardPi_user'@'localhost';

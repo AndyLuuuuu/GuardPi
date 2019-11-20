@@ -21,7 +21,7 @@ const Login = ({ navigation }) => {
 
   const login = () => {
     console.log(username, userPass);
-    Axios.post("http://192.168.0.12:3000/login", { username, userPass })
+    Axios.post("http://10.161.213.126:3000/login", { username, userPass })
       .then(res => {
         console.log(res.data);
         if (res.data.auth) {

@@ -1,6 +1,5 @@
-DROP DATABASE IF EXISTS guardPi;
+DROP DATABASE guardPi;
 CREATE DATABASE guardPi;
-USE guardPi;
 
 DROP TABLE IF EXISTS userAccounts;
 CREATE TABLE userAccounts (
@@ -12,16 +11,15 @@ CREATE TABLE userAccounts (
 );
 
 DROP TABLE IF EXISTS devices;
+DROP TABLE IF EXISTS systemEvents;
 CREATE TABLE devices (
     deviceID VARCHAR(255) NOT NULL,
     mac CHAR(20) NOT NULL,
     deviceName VARCHAR(255) NOT NULL,
     PRIMARY KEY (deviceID)
 );
-
-DROP TABLE IF EXISTS systemEvents;
 CREATE TABLE systemEvents(
-    id INT AUTO_INCREMENT NOT NULL,
+    id SERIAL,
     eventTime TIMESTAMP NOT NULL,
     deviceID VARCHAR(255) NOT NULL,
     eventMessage VARCHAR(255) NOT NULL,
@@ -32,8 +30,9 @@ CREATE TABLE systemEvents(
         ON UPDATE CASCADE
 );
 
-INSERT INTO userAccounts SET id = "ee83d499-f19f-4101-9b55-b50d0311b768", username="guardPi_user", userPass="$2b$10$OhrmA9r0N62rH4J5.KAj5OBfw2xLoiTBiPCfLsULj.UjvxovuMRUO", token="7689e12f-6498-4b63-804f-94cd463d0d4f";
+INSERT INTO userAccounts (id, username, userPass, token) VALUES ('ee83d499-f19f-4101-9b55-b50d0311b768', 'guardPi_user', '$2b$10$OhrmA9r0N62rH4J5.KAj5OBfw2xLoiTBiPCfLsULj.UjvxovuMRUO', '7689e12f-6498-4b63-804f-94cd463d0d4f');
 
 -- omit creating a user if user account below has already been created
-CREATE USER 'guardPi_user'@'localhost' IDENTIFIED BY 'XeqLLSLkl3IcgsYp';
-GRANT SELECT, DELETE, INSERT, UPDATE ON guardPi.* TO 'guardPi_user'@'localhost';
+CREATE USER guardPi_user WITH PASSWORD 'XeqLLSLkl3IcgsYp';
+GRANT SELECT, UPDATE, INSERT, UPDATE ON guardPi TO guardPi_user;
+GRANT SELECT, DELETE, INSERT, UPDATE ON guardPi TO 'guardPi_user';

@@ -3,24 +3,23 @@ const app = express();
 const bodyParser = require("body-parser");
 const expressws = require("express-ws")(app);
 const PORT = process.env.PORT || 3000;
-const sql = require("mysql");
+const { Client } = require("pg");
 const { login_func } = require("./Database/functions");
 
-const connection = sql.createConnection({
-  // FUCKING USE 8080 NOT 3306 OR 80.
+const connection = new Client({
   host: "localhost",
-  user: "guardPi_user",
-  password: "XeqLLSLkl3IcgsYp",
-  database: "guardPi"
+  port: 5432,
+  database: "guardpi",
+  user: "guardpi_user",
+  password: "XeqLLSLkl3IcgsYp"
 });
 
 connection.connect(err => {
   if (err) {
-    console.log(err);
-    return;
+    console.error("connection error", err.stack);
+  } else {
+    console.log("Database connected.");
   }
-  console.log("Database connected.");
-  console.log("Connected as id " + connection.threadId);
 });
 
 // parse application/x-www-form-urlencoded

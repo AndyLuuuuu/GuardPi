@@ -20,25 +20,26 @@ const Login = ({ navigation }) => {
   const [userPass, setUserPass] = useState("");
 
   const login = () => {
-    console.log(username, userPass);
-    Axios.post("http://10.161.213.126:3000/login", { username, userPass })
-      .then(res => {
-        console.log(res.data);
-        if (res.data.auth) {
-          navigation.setParams({ token: res.data.token });
-          navigation.navigate("mainAppStack");
-        } else {
-          Alert.alert(
-            "Login Failed.",
-            "Please check your login credentials!",
-            [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-            { cancelable: false }
-          );
-        }
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    // console.log(username, userPass);
+    // Axios.post("http://10.161.213.126:3000/login", { username, userPass })
+    //   .then(res => {
+    //     console.log(res.data);
+    //     if (res.data.auth) {
+    //       navigation.setParams({ token: res.data.token });
+    //       navigation.navigate("mainAppStack");
+    //     } else {
+    //       Alert.alert(
+    //         "Login Failed.",
+    //         "Please check your login credentials!",
+    //         [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+    //         { cancelable: false }
+    //       );
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   });
+    navigation.navigate("mainAppStack");
   };
 
   return (

@@ -1,7 +1,8 @@
 const bcrypt = require("bcrypt");
+const uuid = require("uuid/v4");
 
 module.exports = {
-  login_func: (db_conn, username, password, callback) => {
+  login: (db_conn, username, password, callback) => {
     db_conn.query(
       "SELECT userPass, token FROM userAccounts WHERE username=$1",
       [username],
@@ -39,5 +40,14 @@ module.exports = {
         }
       }
     );
+  },
+  retrieve_devices: (db_conn, callback) => {
+    db_conn.query("SELECT * FROM devices", [], (err, result) => {
+      if (err) {
+        console.log(err);
+        throw err;
+      }
+      callback(result);
+    });
   }
 };

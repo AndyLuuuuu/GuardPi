@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const expressws = require("express-ws")(app);
 const PORT = process.env.PORT || 3000;
 const { Client } = require("pg");
-const { login_func } = require("./Database/functions");
+const { login, retrieve_devices } = require("./Database/functions");
 
 const connection = new Client({
   host: "localhost",
@@ -37,7 +37,16 @@ app.post("/login", function(req, res) {
   const callback = data => {
     res.send(data);
   };
-  login_func(connection, req.body.username, req.body.userPass, callback);
+  login(connection, req.body.username, req.body.userPass, callback);
+});
+
+app.get("/retrieve_devices", (req, res) => {
+  console.log(req);
+  const callback = data => {
+    res.send(data);
+    console.log(data);
+  };
+  retrieve_devices(connection, callback);
 });
 
 app.ws("/", function(ws, req) {

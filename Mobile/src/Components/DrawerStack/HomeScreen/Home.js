@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container } from "./Styled";
 import { WebView } from "react-native-webview";
 import { Text, Image, StyleSheet, Dimensions, View } from "react-native";
 
 const { width, height } = Dimensions.get("window");
-const streamUri = "http://192.168.0.20:8000/stream.mjpg";
+const streamUri = "http://192.168.43.90:8000/stream.mjpg";
 
 const html = `
 <html>
@@ -22,7 +22,9 @@ const html = `
 </body>
 </html> `;
 
-const Home = () => {
+const Home = ({ navigation }) => {
+  // const {userToken, setUserToken} = navigation.getParam("token", "default")
+  console.log("home", navigation.getParam("token", "default"));
   return (
     <Container>
       <View style={styles.spacer}></View>

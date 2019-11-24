@@ -53,7 +53,7 @@ const DrawerStack = createDrawerNavigator(
     Setting: withHeader("settingScreen", Setting, "Settings")
   },
   {
-    contentComponent: DrawerMenu
+    contentComponent: props => <DrawerMenu {...props} />
   }
 );
 
@@ -62,7 +62,9 @@ const PrimaryStack = createSwitchNavigator(
     loginStack: {
       screen: LoginStack
     },
-    mainAppStack: { screen: DrawerStack }
+    mainAppStack: {
+      screen: DrawerStack
+    }
   },
   {
     // headerMode: "none",

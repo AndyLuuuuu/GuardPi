@@ -22,7 +22,6 @@ module.exports = {
             }
             if (res) {
               let token = rows[0].token;
-              console.log(token);
               callback({
                 auth: res,
                 token: token
@@ -41,13 +40,26 @@ module.exports = {
       }
     );
   },
-  retrieve_devices: (db_conn, callback) => {
-    db_conn.query("SELECT * FROM devices", [], (err, result) => {
-      if (err) {
-        console.log(err);
-        throw err;
+  retrieve_devices: (db_conn, userToken, callback) => {
+    db_conn.query(
+      "SELECT * FROM devices WHERE userToken=$1",
+      [userToken],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+        callback(result.rows);
       }
-      callback(result);
-    });
+    );
+  },
+  device_connect: (db_conn, mac) => {
+    db_conn.query(
+      "UPDATE devices SET isConnected = true WHERE mac=$1",
+      [mac],
+      (err, result) => {
+        console.log(err, result);
+      }
+    );
   }
 };

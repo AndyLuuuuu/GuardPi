@@ -1,6 +1,8 @@
 export const theme = {
   color: {
-    errorRed: "#f73939",
-    submitBlue: "#038cfc"
+    offlineRed: "#f54842",
+    onlineGreen: "#42f563",
+    submitBlue: "#038cfc",
+    grey: "#878787"
   }
 };

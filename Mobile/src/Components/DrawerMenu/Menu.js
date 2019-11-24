@@ -13,13 +13,8 @@ import {
 
 const Menu = ({ navigation }) => {
   useEffect(() => {
-    // Somehow find HomeScreen and pass token param.
-    // Somehow find HomeScreen and pass token param.
-    // Somehow find HomeScreen and pass token param.
-    // Somehow find HomeScreen and pass token param.
-    // Somehow find HomeScreen and pass token param.
     setUserToken(navigation.getParam("token"));
-    console.log("drawer", navigation.getParam("token"));
+    navigation.navigate("homeScreen", { token: navigation.getParam("token") });
   }, []);
   const [userToken, setUserToken] = useState("");
   const UpperMenuItems = [
@@ -27,10 +22,6 @@ const Menu = ({ navigation }) => {
     { title: "Monitor", iconName: "camera-control", route: "monitorScreen" },
     { title: "Event Logs", iconName: "calendar-text", route: "eventScreen" }
   ];
-  // const LowerMenuItems = [
-  //   { title: "Settings", iconName: "settings", route: "settingScreen" },
-  //   { title: "Sign out", iconName: "logout" }
-  // ];
 
   const Logout = () => {
     navigation.navigate("loginStack");

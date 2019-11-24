@@ -15,8 +15,9 @@ CREATE TABLE userAccounts (
 
 CREATE TABLE devices (
     deviceID VARCHAR(255) NOT NULL,
-    mac CHAR(20) NOT NULL,
+    deviceType VARCHAR(100) NOT NULL,
     deviceName VARCHAR(255) NOT NULL,
+    mac CHAR(20) NOT NULL,
     isConnected BOOLEAN DEFAULT FALSE,
     userToken VARCHAR(255) NOT NULL,
     PRIMARY KEY (deviceID),

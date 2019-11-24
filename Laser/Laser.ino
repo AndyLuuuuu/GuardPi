@@ -10,6 +10,7 @@ int ldrBase;
 boolean armed = true;
 
 using namespace websockets;
+WebsocketsClient client;
 
 void onMessageCallback(WebsocketsMessage message) {
   Serial.print("Got Message: ");
@@ -23,12 +24,13 @@ void onEventsCallback(WebsocketsEvent event, String data) {
     Serial.println("Connnection Closed");
   } else if (event == WebsocketsEvent::GotPing) {
     Serial.println("Got a Ping!");
+    client.send("{\"type\":\"device\",\"mac\":\"" + WiFi.macAddress() + "\"}");
   } else if (event == WebsocketsEvent::GotPong) {
     Serial.println("Got a Pong!");
   }
 }
 
-WebsocketsClient client;
+
 
 
 void setup() {
@@ -53,24 +55,27 @@ void setup() {
   Serial.print("IP: ");
   Serial.print(WiFi.localIP());
   Serial.println("");
-
-  //  client.connect("ws://192.168.0.12:3000/");
-  //  client.onMessage(onMessageCallback);
+  client.onMessage(onMessageCallback);
+  client.onEvent(onEventsCallback);
+  client.connect("ws://192.168.0.12:3000/ws");
+  client.send("{\"type\":\"device\",\"mac\":\"" + WiFi.macAddress() + "\"}");
+  client.send("{\"mac\":\"" + WiFi.macAddress() + "\"}");
 
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  int ldrVal = analogRead(ldrPin);
-  Serial.println(ldrBase);
-  Serial.println(ldrVal);
-//  if (armed) {
-    if (ldrVal < ldrBase) {
-      //      digitalWrite(laser, LOW);
-      //      armed = false;
-      client.send("intruder");
-      Serial.println("Intruder!");
-//    }
-  }
-  delay(200);
+  client.poll();
+  ////   put your main code here, to run repeatedly:
+  //  int ldrVal = analogRead(ldrPin);
+  //  Serial.println(ldrBase);
+  //  Serial.println(ldrVal);
+  //  //  if (armed) {
+  //  if (ldrVal < ldrBase) {
+  //    //      digitalWrite(laser, LOW);
+  //    //      armed = false;
+  //    client.send("intruder");
+  //    Serial.println("Intruder!");
+  //    //    }
+  //  }
+  //  delay(200);
 }

@@ -23,7 +23,6 @@ const html = `
 </html> `;
 
 const Home = ({ navigation }) => {
-  // const {userToken, setUserToken} = navigation.getParam("token", "default")
   console.log("home", navigation.getParam("token", "default"));
   return (
     <Container>

@@ -4,7 +4,13 @@ const bodyParser = require("body-parser");
 const expressws = require("express-ws")(app);
 const PORT = process.env.PORT || 3000;
 const { Client } = require("pg");
-const { login, retrieve_devices } = require("./Database/functions");
+const {
+  login,
+  retrieve_devices,
+  device_connect
+} = require("./Database/functions");
+let mobileAppSocket = [];
+let deviceSockets = [];
 
 const connection = new Client({
   host: "localhost",
@@ -40,21 +46,49 @@ app.post("/login", function(req, res) {
   login(connection, req.body.username, req.body.userPass, callback);
 });
 
-app.get("/retrieve_devices", (req, res) => {
-  console.log(req);
-  const callback = data => {
-    res.send(data);
+const wsInstance = expressws.getWss("/ws");
+
+app.ws("/ws", (ws, req) => {
+  ws.on("message", msg => {
+    let data = JSON.parse(msg);
     console.log(data);
-  };
-  retrieve_devices(connection, callback);
+    switch (data.type) {
+      case "application":
+        mobileAppSocket.push(ws);
+        break;
+      case "device":
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        // Check sockets
+        if (!deviceSockets.includes({ mac: data.mac, socket: ws })) {
+          device_connect(connection, data.mac);
+          deviceSockets.push({ mac: data.mac, socket: ws });
+        }
+        break;
+      default:
+        break;
+    }
+  });
 });
 
-app.ws("/", function(ws, req) {
-  ws.on("message", function(msg) {
-    console.log(msg);
-  });
-  console.log("socket", req.testing);
-});
+const checkConnection = setInterval(() => {
+  // console.log(Math.random(), deviceSockets);
+  if (deviceSockets.length > 0) {
+    deviceSockets.forEach(device => {
+      let socket = device.socket;
+      socket.ping("ping");
+    });
+  }
+}, 10000);
+
+const compare = () => {};
 
 app.listen(PORT, () => {
   console.log(`Server is up on ${PORT}`);

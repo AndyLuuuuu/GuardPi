@@ -18,11 +18,12 @@ connection.connect(err => {
 });
 
 connection.query(
-  "INSERT INTO devices (deviceID, mac, deviceName, userToken) VALUES ($1, $2, $3, $4)",
+  "INSERT INTO devices (deviceID, deviceType, deviceName, mac, userToken) VALUES ($1, $2, $3, $4, $5)",
   [
     uuidv4(),
-    "EC:FA:BC:53:DB:36",
+    "motion",
     "PIR Sensor",
+    "EC:FA:BC:53:DB:36",
     "7689e12f-6498-4b63-804f-94cd463d0d4f"
   ],
   (err, result) => {
@@ -36,11 +37,12 @@ connection.query(
 );
 
 connection.query(
-  "INSERT INTO devices (deviceID, mac, deviceName, userToken) VALUES ($1, $2, $3, $4)",
+  "INSERT INTO devices (deviceID, deviceType, deviceName, mac, userToken) VALUES ($1, $2, $3, $4, $5)",
   [
     uuidv4(),
-    "2C:F4:32:49:CA:BC",
+    "laser",
     "Doorway Laser",
+    "2C:F4:32:49:CA:BC",
     "7689e12f-6498-4b63-804f-94cd463d0d4f"
   ],
   (err, result) => {
@@ -54,11 +56,12 @@ connection.query(
 );
 
 connection.query(
-  "INSERT INTO devices (deviceID, mac, deviceName, userToken) VALUES ($1, $2, $3, $4)",
+  "INSERT INTO devices (deviceID, deviceType, deviceName, mac, userToken) VALUES ($1, $2, $3, $4, $5)",
   [
     uuidv4(),
-    "DC:A6:32:1C:4B:6B",
+    "camera",
     "Hallway Camera",
+    "DC:A6:32:1C:4B:6B",
     "7689e12f-6498-4b63-804f-94cd463d0d4f"
   ],
   (err, result) => {

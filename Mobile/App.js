@@ -53,7 +53,7 @@ const DrawerStack = createDrawerNavigator(
     Setting: withHeader("settingScreen", Setting, "Settings")
   },
   {
-    contentComponent: props => <DrawerMenu {...props} />
+    contentComponent: DrawerMenu
   }
 );
 
@@ -83,13 +83,3 @@ const ThemedApp = () => {
 };
 
 export default ThemedApp;
-// export default
-
-// const App = () => {
-//   return (
-//     <Container>
-//       <Text>Open up App.js to start working on your app!</Text>
-//       <Text>{width}</Text>
-//     </Container>
-//   );
-// };

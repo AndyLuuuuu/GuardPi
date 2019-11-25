@@ -4,13 +4,9 @@ const bodyParser = require("body-parser");
 const expressws = require("express-ws")(app);
 const PORT = process.env.PORT || 3000;
 const { Client } = require("pg");
-const {
-  login,
-  retrieve_devices,
-  device_connect
-} = require("./Database/functions");
-let mobileAppSocket = [];
-let deviceSockets = [];
+const { login } = require("./Database/functions");
+let ApplicationSockets = [];
+let DeviceSockets = [];
 
 const connection = new Client({
   host: "localhost",
@@ -52,41 +48,134 @@ app.ws("/ws", (ws, req) => {
   ws.on("message", msg => {
     let data = JSON.parse(msg);
     console.log(data);
-    switch (data.type) {
-      case "application":
-        mobileAppSocket.push(ws);
+    switch (data.event) {
+      case "add_application":
+        ApplicationSockets.push({ token: data.token, ws: ws });
+        console.log(data);
         break;
-      case "device":
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        // Check sockets
-        if (!deviceSockets.includes({ mac: data.mac, socket: ws })) {
-          device_connect(connection, data.mac);
-          deviceSockets.push({ mac: data.mac, socket: ws });
+      case "retrieve_devices":
+        let Sockets = [];
+        if (DeviceSockets.length > 0) {
+          DeviceSockets.map(device => {
+            Sockets.push({
+              name: device.name,
+              type: device.type,
+              mac: device.mac,
+              status: device.status
+            });
+          });
         }
+        ws.send(JSON.stringify({ event: "updated_devices", devices: Sockets }));
         break;
+      case "add_device":
+        console.log(data);
+        DeviceSockets.push({
+          name: data.name,
+          type: data.type,
+          mac: data.mac,
+          status: data.status,
+          ws: ws,
+          isAlive: true
+        });
+        setTimeout(() => {
+          sendUpdates();
+        }, 3000);
+        break;
+      case "device_status":
+        if (DeviceSockets.length > 0) {
+          DeviceSockets.map(device => {
+            if (device.mac === data.mac) {
+              device.status = data.status;
+              device.ws.send(data.status ? "on" : "off");
+            }
+          });
+          setTimeout(() => {
+            sendUpdates();
+          }, 1000);
+        }
+        console.log(data);
+        break;
+      case "device_event":
+        console.log(data);
+      case "ping_response":
+        if (DeviceSockets.length > 0) {
+          DeviceSockets.map(device => {
+            if (device.mac === data.mac) {
+              device.isAlive = true;
+            }
+          });
+        }
       default:
         break;
     }
   });
 });
 
-const checkConnection = setInterval(() => {
+const sendUpdates = () => {
+  if (ApplicationSockets.length > 0) {
+    let Sockets = [];
+    if (DeviceSockets.length > 0) {
+      DeviceSockets.map(device => {
+        Sockets.push({
+          name: device.name,
+          type: device.type,
+          mac: device.mac,
+          status: device.status
+        });
+      });
+    }
+    ApplicationSockets.map(application => {
+      if (application.ws.readyState === 1) {
+        application.ws.send(
+          JSON.stringify({ event: "updated_devices", devices: Sockets })
+        );
+      }
+    });
+  }
+};
+
+const checkSockets = setInterval(() => {
   // console.log(Math.random(), deviceSockets);
-  if (deviceSockets.length > 0) {
-    deviceSockets.forEach(device => {
-      let socket = device.socket;
-      socket.ping("ping");
+  if (DeviceSockets.length > 0) {
+    DeviceSockets.forEach(device => {
+      device.isAlive = false;
+      if (device.ws.readyState === 1) {
+        device.ws.ping();
+      }
     });
   }
 }, 10000);
+
+const cleanupSockets = setInterval(() => {
+  // console.log(Math.random(), deviceSockets);
+  if (DeviceSockets.length > 0) {
+    let aliveSockets = DeviceSockets.filter(device => device.isAlive === true);
+    DeviceSockets = [...aliveSockets];
+  }
+  setTimeout(() => {
+    if (ApplicationSockets.length > 0) {
+      let Sockets = [];
+      if (DeviceSockets.length > 0) {
+        DeviceSockets.map(device => {
+          Sockets.push({
+            name: device.name,
+            type: device.type,
+            mac: device.mac,
+            status: device.status
+          });
+        });
+      }
+      ApplicationSockets.map(application => {
+        if (application.ws.readyState === 1) {
+          application.ws.send(
+            JSON.stringify({ event: "updated_devices", devices: Sockets })
+          );
+        }
+      });
+    }
+  }, 5000);
+  console.log(DeviceSockets);
+}, 30000);
 
 const compare = () => {};
 

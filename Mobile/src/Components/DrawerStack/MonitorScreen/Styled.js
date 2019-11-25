@@ -3,10 +3,21 @@ import styled from "styled-components";
 export const Container = styled.View``;
 
 export const DeviceItem = styled.View`
-  padding: 20px;
+  padding: 20px 30px;
   border-bottom-color: ${props => props.theme.color.grey};
   border-bottom-width: 0.5px;
+  flex-direction: row;
+`;
+
+export const Left = styled.View`
+  flex: 1;
   justify-content: space-evenly;
+`;
+
+export const Right = styled.View`
+  flex: 1;
+  align-items: flex-end;
+  justify-content: center;
 `;
 
 export const DeviceName = styled.Text`
@@ -34,12 +45,28 @@ export const StatusLabel = styled.Text``;
 
 export const StatusIndicator = styled.Text`
   padding: 1px 6px;
+  width: 30px;
   background-color: ${props =>
-    props.online
+    props.status
       ? props.theme.color.onlineGreen
       : props.theme.color.offlineRed};
   font-size: 12px;
   border-radius: 5px;
   justify-content: center;
   align-items: center;
+`;
+
+export const ArmBtn = styled.TouchableOpacity`
+  width: 40px;
+  height: 40px;
+  background-color: ${props =>
+    props.status
+      ? props.theme.color.offlineRed
+      : props.theme.color.onlineGreen};
+  border-radius: 50px;
+`;
+
+export const ArmImage = styled.Image`
+  width: 40px;
+  height: 40px;
 `;

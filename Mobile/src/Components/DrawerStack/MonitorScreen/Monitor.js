@@ -1,89 +1,116 @@
 import React, { useEffect, useState } from "react";
 import Axios from "axios";
-import { Text, FlatList, Alert } from "react-native";
+import { Text, FlatList, Alert, View, Image } from "react-native";
 import {
   Container,
   DeviceItem,
+  Left,
+  Right,
   DeviceName,
   DeviceType,
   DeviceMAC,
   DeviceStatus,
   StatusLabel,
-  StatusIndicator
+  StatusIndicator,
+  ArmBtn,
+  ArmImage
 } from "./Styled";
+
+let ws = null;
 
 const Monitor = ({ navigation }) => {
   useEffect(() => {
-    const ws = new WebSocket("ws://192.168.0.12:3000/ws");
+    ws = new WebSocket("ws://192.168.0.12:3000/ws");
     ws.onopen = () => {
       // connection opened
       let data = JSON.stringify({
-        type: "application",
+        event: "add_application",
         token: navigation.getParam("token")
       });
       ws.send(data);
+      let retrieve_devices = JSON.stringify({
+        event: "retrieve_devices",
+        token: navigation.getParam("token")
+      });
+      ws.send(retrieve_devices);
     };
 
     ws.onmessage = e => {
       // a message was received
-      console.log(e.data);
+      let data = JSON.parse(e.data);
+      console.log(data);
+      switch (data.event) {
+        case "updated_devices":
+          setDevices(data.devices);
+          break;
+        default:
+          break;
+      }
       // setDevices(e.data);
     };
 
     ws.onerror = e => {
       // an error occurred
       console.log(e.message);
+      Alert.alert(
+        "Oh no!",
+        "Unable to retrieve devices. Check your network.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
     };
 
     ws.onclose = e => {
       // connection closed
       console.log(e.code, e.reason);
     };
-    // Axios.get("http://192.168.0.12:3000/retrieve_devices", {
-    //   params: {
-    //     token: navigation.getParam("token")
-    //   }
-    // })
-    //   .then(res => {
-    //     setDevices(res.data);
-    //   })
-    //   .catch(err => {
-    //     Alert.alert(
-    //       "Oh no!",
-    //       "Unable to retrieve devices. Check your network.",
-    //       [{ text: "OK", onPress: () => console.log("OK Pressed") }],
-    //       { cancelable: false }
-    //     );
-    //     console.log(err);
-    //   });
   }, []);
   const [devices, setDevices] = useState([]);
+
+  const changeStatus = (mac, status) => {
+    let data = JSON.stringify({
+      event: "device_status",
+      mac: mac,
+      status: status
+    });
+    ws.send(data);
+  };
   return (
     <Container>
       {/* {console.log(devices.length)} */}
-      {/* <FlatList
+      <FlatList
         data={devices}
-        renderItem={({ item }) => <DeviceItems device={item} />}
-        keyExtractor={item => item.deviceid}
-      /> */}
+        renderItem={({ item }) => (
+          <DeviceItems device={item} changeStatus={changeStatus} />
+        )}
+        keyExtractor={item => item.mac}
+      />
     </Container>
   );
 };
 
-const DeviceItems = ({ device }) => {
-  const { devicename, devicetype, mac, isconnected } = device;
+const DeviceItems = ({ device, changeStatus }) => {
+  const { name, type, mac, status } = device;
   // console.log(isconnected);
   return (
     <DeviceItem>
-      <DeviceName>{devicename}</DeviceName>
-      <DeviceType>{devicetype}</DeviceType>
-      <DeviceMAC>{mac}</DeviceMAC>
-      <DeviceStatus>
-        <StatusLabel>Status: </StatusLabel>
-        <StatusIndicator online={isconnected}>
-          {isconnected ? "ONLINE" : "OFFLINE"}
-        </StatusIndicator>
-      </DeviceStatus>
+      <Left>
+        <DeviceName>{name}</DeviceName>
+        <DeviceType>{type}</DeviceType>
+        <DeviceMAC>{mac}</DeviceMAC>
+        <DeviceStatus>
+          <StatusLabel>Status: </StatusLabel>
+          <StatusIndicator status={status}></StatusIndicator>
+        </DeviceStatus>
+      </Left>
+      <Right>
+        <ArmBtn status={status} onPress={() => changeStatus(mac, !status)}>
+          <ArmImage
+            source={require("../../../../assets/power_icon.png")}
+            resizeMode="contain"
+          />
+        </ArmBtn>
+      </Right>
     </DeviceItem>
   );
 };

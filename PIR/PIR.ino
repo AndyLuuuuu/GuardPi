@@ -4,9 +4,8 @@
 const char* ssid = "HitronAL2.4";
 const char* password = "lu19920403";
 
-const int ldrPin = A0;
-const int laser = 5;
-int ldrBase;
+const int ledPin = 0;
+const int pirPin = 4;
 boolean armed = false;
 
 using namespace websockets;
@@ -17,17 +16,16 @@ void onMessageCallback(WebsocketsMessage message) {
   Serial.println(message.data());
   if (message.data() == "on") {
     armed = true;
-    digitalWrite(laser, HIGH);
   } else if (message.data() == "off") {
     armed = false;
-    digitalWrite(laser, LOW);
+    digitalWrite(ledPin, LOW);
   }
 }
 
 void onEventsCallback(WebsocketsEvent event, String data) {
   if (event == WebsocketsEvent::ConnectionOpened) {
     Serial.println("Connnection Opened");
-    client.send("{\"event\":\"add_device\",\"name\":\"Doorway Laser\",\"type\":\"Laser\",\"mac\":\"" + WiFi.macAddress() + "\",\"status\":false}");
+    client.send("{\"event\":\"add_device\",\"name\":\"Office Motion\",\"type\":\"Motion\",\"mac\":\"" + WiFi.macAddress() + "\",\"status\":false}");
   } else if (event == WebsocketsEvent::ConnectionClosed) {
     Serial.println("Connnection Closed");
   } else if (event == WebsocketsEvent::GotPing) {
@@ -44,12 +42,8 @@ void onEventsCallback(WebsocketsEvent event, String data) {
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
-  pinMode(laser, OUTPUT);
-  pinMode(ldrPin, INPUT);
-  digitalWrite(laser, LOW);
-  ldrBase = analogRead(ldrPin);
-  delay(500);
-
+  pinMode(ledPin, OUTPUT);
+  pinMode(pirPin, INPUT);
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
   while (WiFi.status() != WL_CONNECTED) {
@@ -70,14 +64,16 @@ void setup() {
 void loop() {
   client.poll();
 //put your main code here, to run repeatedly:
-  int ldrVal = analogRead(ldrPin);
-  //  Serial.println(ldrBase);
-  //  Serial.println(ldrVal);
+  int pirVal = digitalRead(pirPin);
   if (armed) {
-    if (ldrVal < ldrBase) {
-      client.send("{\"event\":\"device_event\",\"name\":\"Doorway Laser\",\"type\":\"Laser\",\"mac\":\"" + WiFi.macAddress() + "\",\"message\":\"Laser tripped.\"}");
-      Serial.println("Intruder!");
+    if (pirVal == HIGH) {
+      digitalWrite(ledPin, HIGH);
+      client.send("{\"event\":\"device_event\",\"name\":\"Office Motion\",\"type\":\"Motion\",\"mac\":\"" + WiFi.macAddress() + "\",\"message\":\"Motion detected.\"}");
+      delay(1000);
+      digitalWrite(ledPin, LOW);
+    } else if (pirVal == LOW) {
+      digitalWrite(ledPin, LOW);
     }
   }
-  delay(500);
+  delay(10000);
 }

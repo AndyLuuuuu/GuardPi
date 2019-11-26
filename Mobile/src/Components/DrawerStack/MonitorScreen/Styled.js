@@ -44,14 +44,13 @@ export const DeviceStatus = styled.View`
 export const StatusLabel = styled.Text``;
 
 export const StatusIndicator = styled.Text`
-  padding: 1px 6px;
-  width: 30px;
+  width: 15px;
+  height: 15px;
   background-color: ${props =>
     props.status
       ? props.theme.color.onlineGreen
       : props.theme.color.offlineRed};
-  font-size: 12px;
-  border-radius: 5px;
+  border-radius: 50px;
   justify-content: center;
   align-items: center;
 `;

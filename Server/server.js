@@ -4,7 +4,11 @@ const bodyParser = require("body-parser");
 const expressws = require("express-ws")(app);
 const PORT = process.env.PORT || 3000;
 const { Client } = require("pg");
-const { login } = require("./Database/functions");
+const {
+  login,
+  system_event,
+  retrieve_events
+} = require("./Database/functions");
 let ApplicationSockets = [];
 let DeviceSockets = [];
 
@@ -40,6 +44,13 @@ app.post("/login", function(req, res) {
     res.send(data);
   };
   login(connection, req.body.username, req.body.userPass, callback);
+});
+
+app.get("/events", (req, res) => {
+  const callback = data => {
+    res.send(data);
+  };
+  retrieve_events(connection, callback);
 });
 
 const wsInstance = expressws.getWss("/ws");
@@ -97,6 +108,7 @@ app.ws("/ws", (ws, req) => {
         break;
       case "device_event":
         console.log(data);
+        system_event(connection, data.name, data.type, data.mac, data.message);
       case "ping_response":
         if (DeviceSockets.length > 0) {
           DeviceSockets.map(device => {
@@ -137,7 +149,7 @@ const sendUpdates = () => {
 const checkSockets = setInterval(() => {
   // console.log(Math.random(), deviceSockets);
   if (DeviceSockets.length > 0) {
-    DeviceSockets.forEach(device => {
+    DeviceSockets.map(device => {
       device.isAlive = false;
       if (device.ws.readyState === 1) {
         device.ws.ping();
@@ -175,7 +187,7 @@ const cleanupSockets = setInterval(() => {
     }
   }, 5000);
   console.log(DeviceSockets);
-}, 30000);
+}, 15000);
 
 const compare = () => {};
 

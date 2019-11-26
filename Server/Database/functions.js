@@ -40,25 +40,28 @@ module.exports = {
       }
     );
   },
-  retrieve_devices: (db_conn, userToken, callback) => {
+  system_event: (db_conn, deviceName, deviceType, deviceMac, message) => {
     db_conn.query(
-      "SELECT * FROM devices WHERE userToken=$1",
-      [userToken],
+      "INSERT INTO systemEvents (deviceName, deviceType, deviceMac, eventMessage) VALUES ($1,$2,$3,$4)",
+      [deviceName, deviceType, deviceMac, message],
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+      }
+    );
+  },
+  retrieve_events: (db_conn, callback) => {
+    db_conn.query(
+      "SELECT * FROM systemEvents ORDER BY eventTime",
+      [],
       (err, result) => {
         if (err) {
           console.log(err);
           throw err;
         }
         callback(result.rows);
-      }
-    );
-  },
-  device_connect: (db_conn, mac) => {
-    db_conn.query(
-      "UPDATE devices SET isConnected = true WHERE mac=$1",
-      [mac],
-      (err, result) => {
-        console.log(err, result);
       }
     );
   }

@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoWebsockets.h>
 
-const char* ssid = "HitronAL2.4";
-const char* password = "lu19920403";
+const char* ssid = "G7 ThinQ_8654";
+const char* password = "Aa1779144";
 
 const int ldrPin = A0;
 const int laser = 5;
@@ -63,7 +63,7 @@ void setup() {
   Serial.println("");
   client.onMessage(onMessageCallback);
   client.onEvent(onEventsCallback);
-  client.connect("ws://192.168.0.12:3000/ws");
+  client.connect("ws://192.168.43.122:3000/ws");
 
 }
 

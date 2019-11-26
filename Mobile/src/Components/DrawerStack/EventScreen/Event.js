@@ -16,7 +16,7 @@ import {
 
 const Event = () => {
   useEffect(() => {
-    Axios.get("http://192.168.0.12:3000/events").then(res => {
+    Axios.get("http://192.168.43.122:3000/events").then(res => {
       console.log(res.data);
       setEvents([...res.data.reverse()]);
     });
@@ -25,7 +25,7 @@ const Event = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    Axios.get("http://192.168.0.12:3000/events")
+    Axios.get("http://192.168.43.122:3000/events")
       .then(res => {
         console.log(res.data);
         setEvents([...res.data.reverse()]);

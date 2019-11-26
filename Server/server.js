@@ -156,7 +156,7 @@ const checkSockets = setInterval(() => {
       }
     });
   }
-}, 10000);
+}, 5000);
 
 const cleanupSockets = setInterval(() => {
   // console.log(Math.random(), deviceSockets);
@@ -185,9 +185,9 @@ const cleanupSockets = setInterval(() => {
         }
       });
     }
-  }, 5000);
+  }, 2000);
   console.log(DeviceSockets);
-}, 15000);
+}, 20000);
 
 const compare = () => {};
 

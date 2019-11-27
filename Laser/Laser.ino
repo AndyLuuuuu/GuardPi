@@ -1,11 +1,12 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoWebsockets.h>
 
-const char* ssid = "G7 ThinQ_8654";
-const char* password = "Aa1779144";
+const char* ssid = "HitronAL2.4";
+const char* password = "lu19920403";
 
 const int ldrPin = A0;
 const int laser = 5;
+const int armedLed = 0;
 int ldrBase;
 boolean armed = false;
 
@@ -17,10 +18,14 @@ void onMessageCallback(WebsocketsMessage message) {
   Serial.println(message.data());
   if (message.data() == "on") {
     armed = true;
+    digitalWrite(armedLed, HIGH);
+    ldrBase = analogRead(ldrPin);
+    delay(1000);
     digitalWrite(laser, HIGH);
   } else if (message.data() == "off") {
     armed = false;
     digitalWrite(laser, LOW);
+    digitalWrite(armedLed, LOW);
   }
 }
 
@@ -46,8 +51,9 @@ void setup() {
   Serial.begin(9600);
   pinMode(laser, OUTPUT);
   pinMode(ldrPin, INPUT);
+  pinMode(armedLed, OUTPUT);
+  digitalWrite(armedLed, LOW);
   digitalWrite(laser, LOW);
-  ldrBase = analogRead(ldrPin);
   delay(500);
 
   WiFi.begin(ssid, password);
@@ -63,8 +69,7 @@ void setup() {
   Serial.println("");
   client.onMessage(onMessageCallback);
   client.onEvent(onEventsCallback);
-  client.connect("ws://192.168.43.122:3000/ws");
-
+  client.connect("ws://192.168.0.12:3000/ws");
 }
 
 void loop() {
@@ -74,10 +79,11 @@ void loop() {
   //  Serial.println(ldrBase);
   //  Serial.println(ldrVal);
   if (armed) {
-    if (ldrVal < ldrBase) {
+    if (ldrVal - 50 < ldrBase) {
       client.send("{\"event\":\"device_event\",\"name\":\"Doorway Laser\",\"type\":\"Laser\",\"mac\":\"" + WiFi.macAddress() + "\",\"message\":\"Laser tripped.\"}");
       Serial.println("Intruder!");
+      delay(3000);
     }
   }
-  delay(500);
+  delay(250);
 }

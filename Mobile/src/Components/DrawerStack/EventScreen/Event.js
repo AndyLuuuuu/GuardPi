@@ -13,10 +13,11 @@ import {
   EventText,
   EventDate
 } from "./Styled";
+import { IP } from "../../../DevSettings";
 
 const Event = () => {
   useEffect(() => {
-    Axios.get("http://192.168.43.122:3000/events").then(res => {
+    Axios.get(`http://${IP}/events`).then(res => {
       console.log(res.data);
       setEvents([...res.data.reverse()]);
     });
@@ -25,7 +26,7 @@ const Event = () => {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    Axios.get("http://192.168.43.122:3000/events")
+    Axios.get(`http://${IP}/events`)
       .then(res => {
         console.log(res.data);
         setEvents([...res.data.reverse()]);
@@ -72,7 +73,8 @@ const EventItems = ({ event }) => {
     const hour = temp.getHours() % 12 || 12;
     const AMPM = temp.getHours() >= 12 ? "PM" : "AM";
     const minutes = temp.getMinutes();
-    return `${month} ${day}, ${year} ${hour}:${minutes} ${AMPM}`;
+    const seconds = temp.getSeconds();
+    return `${month} ${day}, ${year} ${hour}:${minutes}:${seconds} ${AMPM}`;
   };
   return (
     <EventItem>

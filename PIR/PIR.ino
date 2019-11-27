@@ -1,8 +1,8 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoWebsockets.h>
 
-const char* ssid = "G7 ThinQ_8654";
-const char* password = "Aa1779144";
+const char* ssid = "HitronAL2.4";
+const char* password = "lu19920403";
 
 const int ledPin = 0;
 const int pirPin = 4;
@@ -16,8 +16,8 @@ void onMessageCallback(WebsocketsMessage message) {
   Serial.print("Got Message: ");
   Serial.println(message.data());
   if (message.data() == "on") {
-    digitalWrite(armedLed, HIGH);
     armed = true;
+    digitalWrite(armedLed, HIGH);
   } else if (message.data() == "off") {
     armed = false;
     digitalWrite(ledPin, LOW);
@@ -61,8 +61,9 @@ void setup() {
   Serial.println("");
   client.onMessage(onMessageCallback);
   client.onEvent(onEventsCallback);
-  client.connect("ws://192.168.43.122:3000/ws");
+  client.connect("ws://192.168.0.12:3000/ws");
   digitalWrite(armedLed, LOW);
+  delay(5000);
 }
 
 void loop() {
@@ -75,9 +76,10 @@ void loop() {
       client.send("{\"event\":\"device_event\",\"name\":\"Office Motion\",\"type\":\"Motion\",\"mac\":\"" + WiFi.macAddress() + "\",\"message\":\"Motion detected.\"}");
       delay(1000);
       digitalWrite(ledPin, LOW);
+      delay(5000);
     } else if (pirVal == LOW) {
       digitalWrite(ledPin, LOW);
     }
   }
-  delay(10000);
+  delay(500);
 }

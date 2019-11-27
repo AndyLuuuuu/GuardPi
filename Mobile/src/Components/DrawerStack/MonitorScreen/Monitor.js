@@ -15,12 +15,12 @@ import {
   ArmBtn,
   ArmImage
 } from "./Styled";
-
+import { IP } from "../../../DevSettings";
 let ws = null;
 
 const Monitor = ({ navigation }) => {
   useEffect(() => {
-    ws = new WebSocket("ws://192.168.43.122:3000/ws");
+    ws = new WebSocket(`ws://${IP}/ws`);
     ws.onopen = () => {
       // connection opened
       let data = JSON.stringify({

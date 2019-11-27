@@ -12,6 +12,7 @@ import {
   ForgotText,
   ForgotLink
 } from "./Styled";
+import { IP } from "../../../DevSettings";
 
 const { width, height } = Dimensions.get("window");
 
@@ -21,7 +22,7 @@ const Login = ({ navigation }) => {
 
   const login = () => {
     console.log(username, userPass);
-    Axios.post("http://192.168.43.122:3000/login", { username, userPass })
+    Axios.post(`http://${IP}/login`, { username, userPass })
       .then(res => {
         console.log(res.data);
         if (res.data.auth) {
@@ -38,7 +39,12 @@ const Login = ({ navigation }) => {
         }
       })
       .catch(err => {
-        console.log(err);
+        Alert.alert(
+          "Network error",
+          "Please check your network connection!",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
       });
     // navigation.navigate("mainAppStack");
   };

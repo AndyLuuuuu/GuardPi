@@ -13,7 +13,9 @@ import {
   StatusLabel,
   StatusIndicator,
   ArmBtn,
-  ArmImage
+  ArmImage,
+  Button,
+  BtnText
 } from "./Styled";
 import { IP } from "../../../DevSettings";
 let ws = null;
@@ -78,6 +80,7 @@ const Monitor = ({ navigation }) => {
   return (
     <Container>
       {/* {console.log(devices.length)} */}
+      <Placeholder navigation={navigation} />
       <FlatList
         data={devices}
         renderItem={({ item }) => (
@@ -110,6 +113,23 @@ const DeviceItems = ({ device, changeStatus }) => {
             resizeMode="contain"
           />
         </ArmBtn>
+      </Right>
+    </DeviceItem>
+  );
+};
+
+const Placeholder = ({ navigation }) => {
+  return (
+    <DeviceItem>
+      <Left>
+        <DeviceName>Office Camera</DeviceName>
+        <DeviceType>Camera</DeviceType>
+        <DeviceMAC>A8:FD:41:CC:C0:25</DeviceMAC>
+      </Left>
+      <Right>
+        <Button onPress={() => navigation.navigate("cameraScreen")}>
+          <BtnText>View Stream</BtnText>
+        </Button>
       </Right>
     </DeviceItem>
   );

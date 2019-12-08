@@ -69,3 +69,14 @@ export const ArmImage = styled.Image`
   width: 40px;
   height: 40px;
 `;
+
+export const Button = styled.TouchableOpacity`
+  background-color: ${props => props.theme.color.submitBlue};
+  padding: 10px;
+  border-radius: 5px;
+`;
+
+export const BtnText = styled.Text`
+  color: ghostwhite;
+  font-weight: 700;
+`;

@@ -2,7 +2,7 @@ import React from "react";
 import { ThemeProvider } from "styled-components";
 import { theme } from "./src/Theme/theme";
 import { createAppContainer, createSwitchNavigator } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack";
+import { createStackNavigator, HeaderBackButton } from "react-navigation-stack";
 import { createDrawerNavigator } from "react-navigation-drawer";
 import Login from "./src/Components/LoginStack/Login/Login";
 import Forgot from "./src/Components/LoginStack/ForgotPass/ForgotPass";
@@ -10,6 +10,7 @@ import { DrawerMenuIcon } from "./src/Components/Headers/Headers";
 import DrawerMenu from "./src/Components/DrawerMenu/Menu";
 import Home from "./src/Components/DrawerStack/HomeScreen/Home";
 import Monitor from "./src/Components/DrawerStack/MonitorScreen/Monitor";
+import Camera from "./src/Components/DrawerStack/CameraScreen/Camera";
 import Event from "./src/Components/DrawerStack/EventScreen/Event";
 import Setting from "./src/Components/DrawerStack/SettingScreen/Setting";
 
@@ -49,6 +50,17 @@ const DrawerStack = createDrawerNavigator(
     // Must create stack navigator for each screen to show header...
     Home: withHeader("homeScreen", Home, "Home"),
     Monitor: withHeader("monitorScreen", Monitor, "Monitor"),
+    Camera: createStackNavigator({
+      cameraScreen: {
+        screen: Camera,
+        title: "Camera",
+        navigationOptions: ({ navigation }) => ({
+          headerLeft: (
+            <HeaderBackButton onPress={() => navigation.goBack(null)} />
+          )
+        })
+      }
+    }),
     Event: withHeader("eventScreen", Event, "Events"),
     Setting: withHeader("settingScreen", Setting, "Settings")
   },

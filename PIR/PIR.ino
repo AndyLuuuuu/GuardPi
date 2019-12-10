@@ -1,11 +1,12 @@
 #include <ESP8266WiFi.h>
 #include <ArduinoWebsockets.h>
 
-const char* ssid = "HitronAL2.4";
-const char* password = "lu19920403";
+const char* ssid = "G7 ThinQ_8654";
+const char* password = "Aa1779144";
 
 const int ledPin = 0;
 const int pirPin = 4;
+int pirState = LOW;
 const int armedLed = 2;
 boolean armed = false;
 
@@ -61,24 +62,28 @@ void setup() {
   Serial.println("");
   client.onMessage(onMessageCallback);
   client.onEvent(onEventsCallback);
-  client.connect("ws://192.168.0.12:3000/ws");
+  client.connect("ws://192.168.43.122:3000/ws");
   digitalWrite(armedLed, LOW);
   delay(5000);
 }
 
 void loop() {
   client.poll();
-//put your main code here, to run repeatedly:
+  //put your main code here, to run repeatedly:
   int pirVal = digitalRead(pirPin);
   if (armed) {
     if (pirVal == HIGH) {
       digitalWrite(ledPin, HIGH);
-      client.send("{\"event\":\"device_event\",\"name\":\"Office Motion\",\"type\":\"Motion\",\"mac\":\"" + WiFi.macAddress() + "\",\"message\":\"Motion detected.\"}");
-      delay(1000);
-      digitalWrite(ledPin, LOW);
+      if (pirState == LOW) {
+        client.send("{\"event\":\"device_event\",\"name\":\"Office Motion\",\"type\":\"Motion\",\"mac\":\"" + WiFi.macAddress() + "\",\"message\":\"Motion detected.\"}");
+      }
+      pirState = HIGH;
       delay(5000);
-    } else if (pirVal == LOW) {
+    } else {
       digitalWrite(ledPin, LOW);
+      if (pirState == HIGH) {
+        pirState = LOW;
+      }
     }
   }
   delay(500);

@@ -1,23 +1,21 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
-const expressws = require('express-ws')(app);
 const mqtt = require('mqtt');
 const PORT = process.env.PORT || 3000;
 const { Client } = require('pg');
 const {
   login,
   system_event,
-  retrieve_events
+  retrieve_events,
+  getServerMessage
 } = require('./Database/functions');
-let ApplicationSockets = [];
-let DeviceSockets = [];
 
-const getServerMessage = message => {
-  return `<${new Date().toLocaleString()}> ${message}`;
-};
+const subscribeTopics = ['/sensorEvents', '/systemEvents', '/connectionEvents'];
 
-const connection = new Client({
+const connectedDevices = new Map();
+
+const db = new Client({
   host: 'localhost',
   port: 5432,
   database: 'guardpi',
@@ -30,33 +28,59 @@ const client = mqtt.connect('mqtts://postman.cloudmqtt.com:25145', {
   password: 'IJBjDBMUekyr'
 });
 
+const messageHandler = (topic, data) => {
+  const { name, type, mac, message } = JSON.parse(data);
+  switch (topic) {
+    case '/systemEvents':
+      // console.log(JSON.parse(data));
+      system_event(db, name, type, mac, message);
+      break;
+    case '/connectionEvents':
+      connectedDevices.set(connectedDevices.size, {
+        name,
+        type,
+        mac,
+        message
+      });
+      getServerMessage(
+        `Device connected: Name: ${name}, type: ${type}, mac: ${mac}`
+      );
+      console.log(connectedDevices);
+      break;
+    default:
+      break;
+  }
+};
+
+const subscribeToTopic = topic => {
+  return new Promise((resolve, reject) => {
+    client.subscribe(topic, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(getServerMessage(`MQTT subscribed to ${topic}.`));
+      }
+    });
+  });
+};
+
 client.on('connect', function() {
-  console.log(`${getServerMessage('CloudMQTT connected.')}`);
-});
-
-client.subscribe('/sensorEvents', () => {
-  client.on('message', (topic, msg, pkt) => {
-    console.log(topic, msg.toString('utf8'), pkt);
+  getServerMessage('CloudMQTT connected.');
+  subscribeTopics.map(topic => {
+    subscribeToTopic(topic);
   });
 });
 
-client.subscribe('/systemEvents', () => {
-  client.on('message', (topic, msg, pkt) => {
-    console.log(topic, msg.toString('utf8'), pkt);
-  });
+client.on('message', (topic, data, pkt) => {
+  // console.log(topic, msg.toString('utf8'), pkt);
+  messageHandler(topic, data.toString('utf8'));
 });
 
-client.subscribe('/connectionEvents', () => {
-  client.on('message', (topic, msg, pkt) => {
-    console.log(topic, msg.toString('utf8'), pkt);
-  });
-});
-
-connection.connect(err => {
+db.connect(err => {
   if (err) {
     console.error('connection error', err.stack);
   } else {
-    console.log(`${getServerMessage('Database connected.')}`);
+    getServerMessage('Database connected.');
   }
 });
 
@@ -81,5 +105,5 @@ app.get('/events', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`${getServerMessage(`Server up on PORT ${PORT}.`)}`);
+  getServerMessage(`Server up on PORT ${PORT}.`);
 });

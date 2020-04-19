@@ -1,0 +1,17 @@
+{
+  "name": "GuardPiMobile",
+  "displayName": "GuardPiMobile",
+  "expo": {
+    "name": "GuardPiMobile",
+    "slug": "GuardPiMobile",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

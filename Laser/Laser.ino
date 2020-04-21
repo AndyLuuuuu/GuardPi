@@ -28,7 +28,6 @@ void setup() {
   pinMode(armedLed, OUTPUT);
   digitalWrite(armedLed, LOW);
   digitalWrite(laser, LOW);
-  delay(500);
 
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
@@ -61,7 +60,7 @@ void setup() {
 
 
   client.subscribe("/sensorEvents");
-  client.publish("/connectionEvents", (char*) String("{\"type\":\"laser\",\"state\":" + String(armed) + ",\"deviceName\":\"Doorway\", \"mac\":\"" + String(WiFi.macAddress()) + "\"}").c_str()); //Topic name
+  client.publish("/connectionEvents", (char*) String("{\"type\":\"laser\",\"state\":" + String(armed) + ",\"deviceName\":\"Doorway\", \"mac\":\"" + String(WiFi.macAddress()) + "\"}").c_str());
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
@@ -104,9 +103,9 @@ void loop() {
   //  Serial.println(ldrVal);
   if (armed) {
     if (ldrVal < ldrBase) {
-//      client.publish("/systemEvents", "Laser triggered.");
+      client.publish("/sensorEvents", (char*) String("{\"cmd\":\"SENSOR_TRIGGER\",\"type\":\"laser\",\"deviceName\":\"Doorway\", \"mac\":\"" + String(WiFi.macAddress()) + "\"}").c_str());
       Serial.println("Intruder!");
-      delay(3000);
+      delay(1000);
     }
   }
   delay(250);

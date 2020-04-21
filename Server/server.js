@@ -8,12 +8,12 @@ const server_uuid = uuid()
 const { Client } = require('pg')
 const {
   login,
-  system_event,
+  save_events,
   retrieve_events,
   getServerMessage,
 } = require('./Database/functions')
 
-const subscribeTopics = ['/sensorEvents', '/systemEvents', '/connectionEvents']
+const subscribeTopics = ['/sensorEvents', '/connectionEvents']
 
 const connectedDevices = new Map()
 const db = new Client({
@@ -30,11 +30,13 @@ const client = mqtt.connect('mqtts://postman.cloudmqtt.com:25145', {
 })
 
 const messageHandler = (topic, data) => {
-  const { type, state, deviceName, mac } = JSON.parse(data)
+  const { cmd, type, state, deviceName, mac } = JSON.parse(data)
   switch (topic) {
-    case '/systemEvents':
-      // console.log(JSON.parse(data));
-      // system_event(db, name, type, mac, message);
+    case '/sensorEvents':
+      if (cmd == 'SENSOR_TRIGGER') {
+        console.log("should save")
+        save_events(db, deviceName, type, mac);
+      }
       break
     case '/connectionEvents':
       connectedDevices.set(mac, {
@@ -127,12 +129,20 @@ app.get('/events', (req, res) => {
 })
 
 app.get('/status', (req, res) => {
-  const events = []
-  const data = {
-    events,
-    devices: Array.from(connectedDevices, ([key, value]) => value),
+  const callback = (data) => {
+    const status = {
+      events: data,
+      devices: Array.from(connectedDevices, ([key, value]) => value),
+    }
+    res.send(status)
   }
-  res.send(data)
+  retrieve_events(db, callback)
+  // const events = []
+  // const data = {
+  //   events,
+  //   devices: Array.from(connectedDevices, ([key, value]) => value),
+  // }
+  // res.send(data)
 })
 
 app.get('/switchOnline', (req, res) => {
@@ -149,13 +159,6 @@ app.get('/switchOnline', (req, res) => {
       break
     }
   }
-  // devices.map((device) => {
-  //   if (device.mac === mac) {
-  //     console.log(device)
-  //     device.state = state === 0 ? 1 : 0
-  //   }
-  //   connectedDevices.add(device)
-  // })
   res.send(Array.from(connectedDevices, ([key, value]) => value))
 })
 
@@ -164,6 +167,7 @@ app.get('/switchAllOnline', (req, res) => {
   const devices = Array.from(connectedDevices, ([key, value]) => value)
   for (let i = 0; i < devices.length; i++) {
     state === 'ON' ? (devices[i].state = 1) : (devices[i].state = 0)
+    switchSensor(devices[i].mac, devices[i].state)
   }
   res.send(Array.from(connectedDevices, ([key, value]) => value))
 })

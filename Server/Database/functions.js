@@ -43,7 +43,8 @@ module.exports = {
       }
     );
   },
-  system_event: (db_conn, deviceName, deviceType, deviceMac, message) => {
+  save_events: (db_conn, deviceName, deviceType, deviceMac) => {
+    const message = `${deviceName} ${deviceType} sensor triggered.`
     db_conn.query(
       'INSERT INTO systemEvents (deviceName, deviceType, deviceMac, eventMessage) VALUES ($1,$2,$3,$4)',
       [deviceName, deviceType, deviceMac, message],

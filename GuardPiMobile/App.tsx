@@ -1,12 +1,15 @@
+import 'react-native-get-random-values';
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
+
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
-import { Entypo } from '@expo/vector-icons'
-import { Ionicons } from '@expo/vector-icons'
+import { Entypo, Ionicons, Feather } from '@expo/vector-icons'
 import { Home } from './src/components/Home/Home'
 import { Devices } from './src/components/Devices/Devices'
+import { Event } from './src/components/Event/Event'
+import { Camera} from './src/components/Devices/Camera'
 
 const HomeStack = createStackNavigator()
 
@@ -50,6 +53,49 @@ const DeviceStackScreen = () => {
   )
 }
 
+const EventStack = createStackNavigator()
+
+const EventStackScreen = () => {
+  return (
+    <EventStack.Navigator>
+      <EventStack.Screen
+        name='Events'
+        component={Event}
+        options={{
+          headerStyle: { height: 70 },
+          headerTitleStyle: {
+            color: 'rgba(0,0,0,0.8)',
+            fontWeight: '100',
+            fontSize: 18,
+          },
+        }}
+      />
+    </EventStack.Navigator>
+  )
+}
+
+const CameraStack = createStackNavigator()
+
+const CameraStackScreen = () => {
+  return (
+    <CameraStack.Navigator>
+      <CameraStack.Screen
+        name='Camera'
+        component={Camera}
+        options={{
+          headerStyle: { height: 70 },
+          headerTitleStyle: {
+            color: 'rgba(0,0,0,0.8)',
+            fontWeight: '100',
+            fontSize: 18,
+          },
+        }}
+      />
+    </CameraStack.Navigator>
+  )
+}
+
+
 const Tab = createBottomTabNavigator()
 
 export default function App() {
@@ -62,8 +108,12 @@ export default function App() {
             switch (route.name) {
               case 'Home':
                 return <Entypo name='home' size={18} color={color} />
+              case 'Camera':
+                return <Entypo name='camera' size={18} color={color} />
               case 'Devices':
                 return <Entypo name='signal' size={18} color={color} />
+              case 'Events':
+                return <Feather name='activity' size={18} color={color} />
               default:
                 break
             }
@@ -75,6 +125,9 @@ export default function App() {
         }}>
         <Tab.Screen name='Home' component={HomeStackScreen} />
         <Tab.Screen name='Devices' component={DeviceStackScreen} />
+        <Tab.Screen name='Camera' component={CameraStackScreen} />
+        <Tab.Screen name='Events' component={EventStackScreen} />
+        
       </Tab.Navigator>
     </NavigationContainer>
   )

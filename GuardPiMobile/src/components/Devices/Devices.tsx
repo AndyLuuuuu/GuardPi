@@ -57,14 +57,6 @@ export const Devices: React.FunctionComponent<{ navigation: any }> = ({
         keyExtractor={(item) => item.mac}
       />
     </SafeAreaView>
-    // <View style={styles.container}>
-
-    //   {devices.map((device) => {
-    //     return (
-    //       <Device data={device} switchState={switchState} key={device.mac} />
-    //     )
-    //   })}
-    // </View>
   )
 }
 

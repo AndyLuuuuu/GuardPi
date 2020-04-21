@@ -1,3 +1,4 @@
+import 'react-native-get-random-values';
 import React, { useState, useEffect, createRef } from 'react'
 import Axios from 'axios'
 import { Ionicons } from '@expo/vector-icons'

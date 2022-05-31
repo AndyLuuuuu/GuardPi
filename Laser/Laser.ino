@@ -3,7 +3,7 @@
 #include <ArduinoJson.h>
 
 const char* ssid = "HitronAL2.4";
-const char* password = "lu19920403";
+const char* password = "*********";
 const char* mqtt_server = "postman.cloudmqtt.com";
 const int mqtt_port = 15145;
 const char* mqtt_username = "yrahqccv";
